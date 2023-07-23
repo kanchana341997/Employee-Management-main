@@ -1,28 +1,17 @@
-import express from 'express';
-import bodyParser from "body-parser";
-
-// import routes
-import router from './Routes/routes.js';
+const express = require("express");
+const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
 
 const app = express();
-
-
-// use express json
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
 
-// use router
-app.use(router);
+const rolesRouter = require("./Routes/role");
+app.use("/roles", rolesRouter);
 
-// Middleware to parse request body as JSON
-app.use(express.json());
+const db = "mongodb://localhost:27017/Employee_Management";
+mongoose
+  .connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log("MongoDB Connected"))
+  .catch((err) => console.log(err));
 
-app.get('/', function(req, res){
-  res.json({ message: 'Welcome to Securra Health' });
-});
-
-// Start server
-const port = 4000; 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+app.listen(5000, () => console.log("Server Running"));
