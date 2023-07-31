@@ -7,14 +7,14 @@
   
   class UpdateRoleByIdRequest {
     constructor(role_name, dept_id, dept_name, updated_by) {
-      this.role_name = "Javitha";
-      this.dept_id = 179;
-      this.dept_name = "EC CS";
-      this.updated_by = "Kanchana";
-    // this.roleName = role_name;
-    // this.deptId = dept_id;
-    // this.deptName = dept_name;
-    // this.updatedBy = updated_by;
+     // this.role_name = "Javitha";
+     // this.dept_id = 179;
+     // this.dept_name = "EC CS";
+     // this.updated_by = "Kanchana";
+     this.role_name = role_name;
+     this.dept_id = dept_id;
+     this.dept_name = dept_name;
+     this.updated_by = updated_by;
     }
   }
   
