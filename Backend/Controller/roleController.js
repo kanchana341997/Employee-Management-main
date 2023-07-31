@@ -72,24 +72,55 @@ try {
 }
 };
 
-// API to update the role
+// API to Get active and inactive role list
+// const activeRole = async (req, res) => {
+// try {
+//   const { active } = req.query;
+
+//   // Create a filter object based on the 'active' query parameter
+//   const filter = active === "true" ? { is_active_flag: true } : active === "false" ? { is_active_flag: false } : {};
+
+//   // Fetch the roles based on the filter
+//   const roles = await Role.find(filter);
+
+//   // Return the list of roles
+//   res.status(200).json(roles);
+// } catch (error) {
+//   console.error("Error fetching roles:", error);
+//   res.status(500).json({ error: "Failed to fetch roles" });
+// }
+// };
+
 const activeRole = async (req, res) => {
-try {
-  const { active } = req.query;
+  try {
+    const { active, page = 1, limit = 10 } = req.query;
 
-  // Create a filter object based on the 'active' query parameter
-  const filter = active === "true" ? { is_active_flag: true } : active === "false" ? { is_active_flag: false } : {};
+    // Create a filter object based on the 'active' query parameter
+    const filter = active === "true" ? { is_active_flag: true } : active === "false" ? { is_active_flag: false } : {};
 
-  // Fetch the roles based on the filter
-  const roles = await Role.find(filter);
+    // Calculate the skip value to skip items on previous pages
+    const skip = (page - 1) * limit;
 
-  // Return the list of roles
-  res.status(200).json(roles);
-} catch (error) {
-  console.error("Error fetching roles:", error);
-  res.status(500).json({ error: "Failed to fetch roles" });
-}
+    // Fetch the roles based on the filter and pagination options
+    const roles = await Role.find(filter).skip(skip).limit(parseInt(limit));
+
+    // Count the total number of roles that match the filter (without pagination)
+    const totalRolesCount = await Role.countDocuments(filter);
+
+    // Return the paginated list of roles along with additional pagination info
+    res.status(200).json({
+      totalRolesCount,
+      currentPage: page,
+      rolesPerPage: limit,
+      totalPages: Math.ceil(totalRolesCount / limit),
+      roles,
+    });
+  } catch (error) {
+    console.error("Error fetching roles:", error);
+    res.status(500).json({ error: "Failed to fetch roles" });
+  }
 };
+
 
 export {   
   getAllRoles,  
